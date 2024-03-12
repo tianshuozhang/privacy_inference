@@ -1,0 +1,11 @@
+1: data = layer1->forward(data);
+0: data = act(data);
+0: data = pool(data);
+1: data = layer2->forward(data);
+0: data = act(data);
+0: data = pool(data);
+1: data = data.view({ -1, 256 });
+1: data = layer3->forward(data);
+0: data = act(data);
+1: data = layer4->forward(data);
+0: data = act(data);
