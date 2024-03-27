@@ -1,6 +1,7 @@
 #pragma once
 #include <torch/torch.h>
 #include"socket.h"
+#include"Quantization.h"
 // 你的头文件保护代码 （如果有的话）
 #ifndef BASE_H
 #define BASE_H

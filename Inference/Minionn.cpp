@@ -1,7 +1,7 @@
 #include "Minionn.h"
 Minionn::Minionn()
-    : layer1(register_module("layer1", torch::nn::Conv2d(torch::nn::Conv2dOptions(1, 16, 5).stride(1).padding(0)))),
-    layer2(register_module("layer2", torch::nn::Conv2d(torch::nn::Conv2dOptions(16, 16, 5).stride(1).padding(0)))),
+    : layer1(register_module("layer1", torch::nn::Conv2d(torch::nn::Conv2dOptions(1, 16, 5).stride(1)))),
+    layer2(register_module("layer2", torch::nn::Conv2d(torch::nn::Conv2dOptions(16, 16, 5).stride(1)))),
     layer3(register_module("layer3", torch::nn::Linear(256, 100))),
     layer4(register_module("layer4", torch::nn::Linear(100, 10))),
     act(register_module("act", torch::nn::ReLU())),
@@ -77,11 +77,12 @@ void Minionn::startServer(torch::Tensor& data) {
     SOCKET s_accept_1;
     std::thread thread1(connectAndListen, std::ref(s_server), std::ref(s_accept), 5010);
     std::thread thread2(connectAndListen, std::ref(s_server_1), std::ref(s_accept_1), 5020);
+    
     thread1.join();
     thread2.join();
-    auto start = std::chrono::high_resolution_clock::now();
+   
     auto input = torch::randn_like(data);
-    auto input_1 = data - input;
+    auto input_1 = (data - input);
 
     std::vector<std::string> operations;
     std::string line;
@@ -95,6 +96,7 @@ void Minionn::startServer(torch::Tensor& data) {
         operationsFile.close();
     }
     std::cout << "¶ÁÈ¡Íê³É\n";
+    auto start = std::chrono::high_resolution_clock::now();
     for (auto iter = operations.begin(); iter != operations.end(); ++iter)
     {
 
@@ -116,6 +118,8 @@ void Minionn::startServer(torch::Tensor& data) {
                         auto act_module = module_info.ptr->as<torch::nn::ReLU>();
 
                         data = act_module->forward(data);
+                        //data = relu_int(data);
+                        
                         // now you can use `linear_module` which is `torch::nn::Linear*`
                     }
 
@@ -238,16 +242,19 @@ void Minionn::startClient(int port) {
                         {
 
                             auto linear_module = module_info.ptr->as<torch::nn::Linear>();
-
                             data = linear_module->forward(data);
-                            // now you can use `linear_module` which is `torch::nn::Linear*`
                         }
                         else if (module_info.type == "torch::nn::Conv2d")
                         {
                             auto conv_module = module_info.ptr->as<torch::nn::Conv2d>();
+                            
+                            
                             if (conv_module != nullptr)
-                            {
+                            {     
                                 data = (conv_module)->forward(data);
+                                //data=conv_2d(data, conv_module);
+                                //std::cout << data[0] - other[0] << std::endl;
+                                
                             }
                             // now you can use `conv_module` which is `torch::nn::Conv2d*`
                         }
