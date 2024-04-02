@@ -3,6 +3,7 @@ import torch.nn as nn
 import datetime
 import torch
 from tqdm import tqdm
+
 def train(model,dataloader,lr=0.1,epochs=20,device='cpu',tag='default'):
     model=model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=lr)
@@ -42,7 +43,8 @@ def eval_acc():
 
 def forward_time(model,dataloader,device='cpu'):
     model=model.to(device)
-    img,label=dataloader[0]
+    data_iter = iter(dataloader)
+    img, label = next(data_iter)
     img=img.to(device)
     label=label.to(device)
     start = datetime.datetime.now()
