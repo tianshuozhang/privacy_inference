@@ -58,7 +58,6 @@ void layer_weight_extraction(Base &module, const std::string path) {
         // 这需要你的新模型的参数名与旧模型的参数名完全匹配
         for (auto& p : module.named_parameters()) {
             if (name == p.key()) {
-           
                 p.value().data().copy_(tensor);
                 break;
             }
