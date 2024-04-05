@@ -62,7 +62,6 @@ void layer_weight_extraction(Base &module, const std::string path) {
                 break;
             }
         }
-        std::cout << std::endl;
         
     }
     return ;
