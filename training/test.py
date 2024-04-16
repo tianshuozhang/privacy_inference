@@ -22,6 +22,7 @@ transforms_test = transforms.Compose([
 ])
 train_dataset=datasets.CIFAR10("./data", train=True, transform=transform_train, download=True)
 train_loader = DataLoader(train_dataset,batch_size=128, shuffle=True)
+torch.save(train_loader,"train_data.pt")
 test_dataset=datasets.CIFAR10("./data", train=False, transform=transforms_test, download=True)
 test_loader = DataLoader(test_dataset,batch_size=32, shuffle=True)
 
@@ -59,20 +60,14 @@ class FlattenModel(torch.nn.Module):
 
 new_model=FlattenModel(model)
  # 假设 src_model 是源模型， tgt_model 是目标模型
-
 # 获取源模型的参数
 src_state_dict = new_model.state_dict()
-
 # 创建一个新的字典，其中的键是参数的名字，值是参数的值
 new_state_dict = {}
-
 for k, v in src_state_dict.items():
-    # .detach() 方法可以使得参数脱离它们所在的计算图，使得参数的修改不会影响到原计算图
-    # .clone() 方法可以复制参数
     new_state_dict[k] = v.detach().clone()
-
 # 加载新的参数到目标模型
 model1.load_state_dict(new_state_dict)
 # train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="Resnet18")
-# test_acc(model=model1,dataloader=test_loader,device="cpu")
+test_acc(model=model1,dataloader=test_loader,device="cpu")
 torch.save(model1,"./checkpoints/Resnet182024-03-27-13-42-56.pth")

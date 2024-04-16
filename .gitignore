@@ -1,0 +1,14 @@
+checkpoints/
+libtorch1.13/
+data/
+Inference/.vs/
+Inference/x64/
+Inference/**.sln
+Inference/**.json
+Inference/**.vcxproj
+Inference/**.vcxproj.filters
+Inference/**.vcxproj.users
+Inference/**.dll
+Inference/**.aps
+
+
