@@ -7,7 +7,7 @@ Inference/**.sln
 Inference/**.json
 Inference/**.vcxproj
 Inference/**.vcxproj.filters
-Inference/**.vcxproj.users
+Inference/**.users
 Inference/**.dll
 Inference/**.aps
 
