@@ -14,6 +14,11 @@ std::vector<Image> read_batch(const std::string& folderpath) {
         }
 
         std::vector<uint8_t> buffer(1024);  // 中间缓冲区
+
+        std::vector<double> mean = { 0.4914, 0.4822, 0.4465 };
+        std::vector<double> std = { 0.2023, 0.1994, 0.2010 };
+        // Create the normalize transform
+        auto normalize = torch::data::transforms::Normalize<>(mean, std);
         for (int i = 0; i < NUM_SAMPLES; ++i) {
             Image img;
 
@@ -22,21 +27,23 @@ std::vector<Image> read_batch(const std::string& folderpath) {
 
             // 读取并处理红色通道
             file.read(reinterpret_cast<char*>(buffer.data()), 1024);
-            torch::Tensor red_channel = torch::tensor(buffer, torch::kUInt8).clone();
+            torch::Tensor red_channel = torch::tensor(buffer, torch::kFloat32).clone();
             red_channel = red_channel.unsqueeze(0).view({ 1, 32, 32 });
 
             // 读取并处理绿色通道
             file.read(reinterpret_cast<char*>(buffer.data()), 1024);
-            torch::Tensor green_channel = torch::tensor(buffer, torch::kUInt8).clone();
+            torch::Tensor green_channel = torch::tensor(buffer, torch::kFloat32).clone();
             green_channel = green_channel.unsqueeze(0).view({ 1, 32, 32 });
 
             // 读取并处理蓝色通道
             file.read(reinterpret_cast<char*>(buffer.data()), 1024);
-            torch::Tensor blue_channel = torch::tensor(buffer, torch::kUInt8).clone();
+            torch::Tensor blue_channel = torch::tensor(buffer, torch::kFloat32).clone();
             blue_channel = blue_channel.unsqueeze(0).view({ 1, 32, 32 });
 
             // 使用torch::cat函数拼接三个通道
             img.tensor = torch::cat({ red_channel, green_channel, blue_channel }, 0);
+            // Apply the transform to your tensor
+            img.tensor = normalize(img.tensor/255);
 
             images.push_back(std::move(img));
         }
@@ -45,4 +52,17 @@ std::vector<Image> read_batch(const std::string& folderpath) {
     
 
     return images;
+}
+CustomDataset::CustomDataset(const std::string& filepath) {
+    images = read_batch(filepath);
+}
+
+// 重写 get 函数来获取数据和标签
+torch::data::Example<> CustomDataset:: get(size_t index)   {
+    return { images[index].tensor.clone(), torch::tensor((uint8_t)images[index].label) };
+}
+
+// 重写 size 函数获取数据集的大小
+torch::optional<size_t> CustomDataset:: size() const  {
+    return images.size();
 }

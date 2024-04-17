@@ -22,7 +22,6 @@ transforms_test = transforms.Compose([
 ])
 train_dataset=datasets.CIFAR10("./data", train=True, transform=transform_train, download=True)
 train_loader = DataLoader(train_dataset,batch_size=128, shuffle=True)
-torch.save(train_loader,"train_data.pt")
 test_dataset=datasets.CIFAR10("./data", train=False, transform=transforms_test, download=True)
 test_loader = DataLoader(test_dataset,batch_size=32, shuffle=True)
 

@@ -62,7 +62,8 @@ class Resnet18(nn.Module):
         out=self.act(out)
         out=self.layer5(out)
         out=self.layer6(out)
-        out+=self.layer7_shortcut(x)
+        # out+=self.layer7_shortcut(x)
+        out+=x
         out=self.act(out)
         x=out.clone()
         out=self.layer8(x)
@@ -70,7 +71,8 @@ class Resnet18(nn.Module):
         out=self.act(out)
         out=self.layer10(out)
         out=self.layer11(out)
-        out+=self.layer12_shortcut(x)
+        # out+=self.layer12_shortcut(x)
+        out+=x
         out=self.act(out)
         x=out.clone()
         out=self.layer13(x)
@@ -87,7 +89,8 @@ class Resnet18(nn.Module):
         out=self.act(out)
         out=self.layer21(out)
         out=self.layer22(out)
-        out+=self.layer23_shortcut(x)
+        # out+=self.layer23_shortcut(x)
+        out+=x
         out=self.act(out)
         x=out.clone()
         out=self.layer24(x)
@@ -104,7 +107,8 @@ class Resnet18(nn.Module):
         out=self.act(out)
         out=self.layer32(out)
         out=self.layer33(out)
-        out+=self.layer34_shortcut(x)
+        # out+=self.layer34_shortcut(x)
+        out+=x
         out=self.act(out)
         x=out.clone()
         out=self.layer35(x)
@@ -121,7 +125,8 @@ class Resnet18(nn.Module):
         out=self.act(out)
         out=self.layer43(out)
         out=self.layer44(out)
-        out+=self.layer45_shortcut(x)
+        # out+=self.layer45_shortcut(x)
+        out+=x
         out=self.act(out)
         out =F.avg_pool2d(out,4)
         out = out.view(out.size(0), -1)

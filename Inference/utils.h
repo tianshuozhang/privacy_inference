@@ -9,8 +9,12 @@
 #include <functional>
 #include "Lenet.h"
 #include"socket.h"
-float test_acc(Base &module,const std::string &datapath );
+#include "cifar10.h"
+
+float test_acc(Base &module,const std::string &datapath, std::string tag);
 
 float test_layer(Base &module, const std::string &datapath);
 
 void layer_weight_extraction(Base& module, const std::string path);
+
+void weight(Base& module, const std::string path);
