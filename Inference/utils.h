@@ -11,9 +11,9 @@
 #include"socket.h"
 #include "cifar10.h"
 
-float test_acc(Base &module,const std::string &datapath, std::string tag);
+float test_acc(Base &module,const std::string &datapath, const std::string &tag);
 
-float test_layer(Base &module, const std::string &datapath);
+float test_layer(Base &module, const std::string &datapath, const std::string &tag);
 
 void layer_weight_extraction(Base& module, const std::string path);
 

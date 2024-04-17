@@ -21,7 +21,7 @@ int main()
     auto datapath = "../data/cifar-10-batches-bin";
     auto tag = "cifar10";
     
-    //std::cout << "Accuracy: " << test_layer(module,datapath)<< "%" << std::endl;
+    std::cout << "Accuracy: " << test_layer(module,datapath,tag)<< "%" << std::endl;
     std::cout << "Accuracy: " << test_acc(module, datapath,tag) << "%" << std::endl;
     
     return 0;
