@@ -152,7 +152,7 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
 
             totalCorrect += correct;
             totalSamples += data.size(0);
-            break;
+            
 
         }
 
@@ -191,7 +191,6 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
 
             totalCorrect += correct;
             totalSamples += data.size(0);
-            break;
 
         }
 

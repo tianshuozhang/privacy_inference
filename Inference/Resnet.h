@@ -6,12 +6,13 @@
 #define RESNET_H
 struct Resnet : Base {
     Resnet();
+    ~Resnet();
     torch::Tensor forward(torch::Tensor x);
     ModuleInfo GetModuleByName(const std::string& name);
 
     torch::Tensor layer_forward(torch::Tensor x);
 
-    void startServer(torch::Tensor& data);
+    void startServer();
     void startClient(int port);
     torch::nn::Conv2d layer1{nullptr}, layer3{ nullptr }, layer5{ nullptr }, layer8{ nullptr },
         layer10{ nullptr }, layer13{ nullptr }, layer15{ nullptr }, layer17_shortcut{ nullptr },
@@ -26,6 +27,10 @@ struct Resnet : Base {
     
     torch::nn::Linear layer46{ nullptr };
     torch::nn::ReLU act;
+    std::vector<torch::Tensor> in;
+    std::vector<torch::Tensor> out;
+    std::mutex mu;
+    bool run_thread;
 };
 
 #endif
