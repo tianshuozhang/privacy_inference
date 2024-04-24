@@ -5,8 +5,10 @@ from models.Lenet import Lenet
 from models.Minionn import Minionn
 from models.Sarda import Sarda
 from models.SecureML import SecureML
-from models.Resnet import ResNet18
+from models.Resnet import ResNet18,ResNet34
 from models.Resnet18 import Resnet18
+from models.Resnet34 import Resnet34
+
 from utils import train,eval_acc,test_acc
 #training
 transform_train = transforms.Compose([
@@ -25,10 +27,8 @@ train_loader = DataLoader(train_dataset,batch_size=128, shuffle=True)
 test_dataset=datasets.CIFAR10("./data", train=False, transform=transforms_test, download=True)
 test_loader = DataLoader(test_dataset,batch_size=32, shuffle=True)
 
-model=torch.load("./checkpoints/Resnet182024-03-27-13-42-56.pth").to('cpu')
+model=torch.load("./checkpoints/Resnet342024-04-22-20-02-58.pth").to('cpu')
 
-model1=Resnet18()
-model = model.eval()
 class FlattenModel(torch.nn.Module):
     def __init__(self, original_model):
         super(FlattenModel, self).__init__()
@@ -65,8 +65,10 @@ src_state_dict = new_model.state_dict()
 new_state_dict = {}
 for k, v in src_state_dict.items():
     new_state_dict[k] = v.detach().clone()
+
+mymodel = Resnet34()
 # 加载新的参数到目标模型
-model1.load_state_dict(new_state_dict)
-# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="Resnet18")
-test_acc(model=model1,dataloader=test_loader,device="cpu")
-torch.save(model1,"./checkpoints/Resnet182024-03-27-13-42-56.pth")
+mymodel.load_state_dict(new_state_dict)
+# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="Resnet34")
+test_acc(model=model,dataloader=test_loader,device="cpu")
+torch.save(model,"./checkpoints/Resnet342024-04-22-20-02-58.pth")

@@ -10,7 +10,7 @@ Inference/**.vcxproj.filters
 Inference/**.users
 Inference/**.dll
 Inference/**.aps
-training/__pucache__/
+training/__pycache__/
 
 
 
