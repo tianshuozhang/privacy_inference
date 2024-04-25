@@ -64,17 +64,15 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
         }
         module.to(device);
         // 遍历数据加载器中的批次
+        auto start = std::chrono::high_resolution_clock::now();
         for (auto& batch : *dataloader) {
-            std::cout << "begin\n";
             // 获取输入和标签
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
             // 前向传播
-            auto start = std::chrono::high_resolution_clock::now();
+            
             torch::Tensor output = module.forward({ data });
-            auto finish = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = finish - start;
-            std::cout << "Elapsed time: " << elapsed.count() << " s\n";
+           
             // 计算预测准确率
             auto predicted = output.argmax(1);
             int64_t correct = predicted.eq(target).sum().item<int64_t>();
@@ -82,9 +80,10 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
             totalCorrect += correct;
             totalSamples += data.size(0);
             break;
-
         }
-
+        auto finish = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = finish - start;
+        std::cout << "Elapsed time: " << elapsed.count() << " s\n";
         float accuracy = static_cast<float>(totalCorrect) / totalSamples * 100.0;
         return accuracy;
     }
@@ -101,7 +100,7 @@ void layer_weight_extraction(Base &module, const std::string path) {
     for (const auto& parameter : loadmodule.named_parameters()) {
         auto& name = parameter.name;
         auto& tensor = parameter.value;
-        std::cout << name << "\n";
+        //std::cout << name << "\n";
         // 根据名字在你的新模型中找到相应的参数，然后设置值
         // 这需要你的新模型的参数名与旧模型的参数名完全匹配
         for (auto& p : module.named_parameters()) {
@@ -175,30 +174,27 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
             device = torch::kCUDA;
         }
         module.to(device);
+        auto start = std::chrono::high_resolution_clock::now();
         // 遍历数据加载器中的批次
         for (auto& batch : *dataloader) {
             // 获取输入和标签
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
             // 前向传播
-            auto start = std::chrono::high_resolution_clock::now();
+            
             torch::Tensor output = module.layer_forward({ data });
-            auto finish = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = finish - start;
-            std::cout << "Elapsed time: " << elapsed.count() << " s\n";
+           
             // 计算预测准确率
             
             auto predicted = output.argmax(1);
-            std::cout << predicted.sizes() << target.sizes() << std::endl;
             int64_t correct = predicted.eq(target).sum().item<int64_t>();
-            std::cout << "111111111\n";
             totalCorrect += correct;
-            std::cout << "111111111\n";
             totalSamples += data.size(0);
-            std::cout << "111111111\n";
             break;
         }
-
+        auto finish = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = finish - start;
+        std::cout << "Elapsed time: " << elapsed.count() << " s\n";
         float accuracy = static_cast<float>(totalCorrect) / totalSamples * 100.0;
         return accuracy;
     }

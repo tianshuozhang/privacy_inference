@@ -30,12 +30,11 @@ int main()
     auto datapath = "../data/cifar-10-batches-bin";
     auto tag = "cifar10";
 
-    //layer_weight_extraction(module, path);
+    layer_weight_extraction(module, path);
 
+    std::cout << "Accuracy: " << test_acc(module, datapath, tag) << "%" << std::endl;
+    std::cout << "Accuracy: " << test_layer(module, datapath, tag) << "%" << std::endl;
     
-    std::cout << "Accuracy: " << test_acc(module, datapath,tag) << "%" << std::endl;
-    //std::cout << "Accuracy: " << test_layer(module, datapath, tag) << "%" << std::endl;
-
     return 0;
 }
 
