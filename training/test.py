@@ -70,5 +70,5 @@ mymodel = Resnet34()
 # 加载新的参数到目标模型
 mymodel.load_state_dict(new_state_dict)
 # train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="Resnet34")
-test_acc(model=model,dataloader=test_loader,device="cpu")
-torch.save(model,"./checkpoints/Resnet342024-04-22-20-02-58.pth")
+test_acc(model=mymodel,dataloader=test_loader,device="cpu")
+torch.save(mymodel,"./checkpoints/Resnet342024-04-22-20-02-58.pth")

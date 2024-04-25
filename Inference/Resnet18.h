@@ -2,11 +2,11 @@
 #include <torch/nn/module.h>
 #include"Base.h"
 
-#ifndef RESNET_H
-#define RESNET_H
-struct Resnet : Base {
-    Resnet();
-    ~Resnet();
+#ifndef RESNET18_H
+#define RESNET18_H
+struct Resnet18 : Base {
+    Resnet18();
+    ~Resnet18();
     torch::Tensor forward(torch::Tensor x);
     ModuleInfo GetModuleByName(const std::string& name);
 

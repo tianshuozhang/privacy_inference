@@ -1,64 +1,104 @@
-#include"Resnet.h"
-Resnet::Resnet()
+#include"Resnet34.h"
+Resnet34::Resnet34()
     : layer1(register_module("layer1", torch::nn::Conv2d(torch::nn::Conv2dOptions(3, 64, 3).stride(1).padding(1).bias(false)))),
     layer3(register_module("layer3", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
     layer5(register_module("layer5", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
     layer8(register_module("layer8", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
     layer10(register_module("layer10", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
-    layer13(register_module("layer13", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 128, 3).stride(2).padding(1).bias(false)))),
-    layer15(register_module("layer15", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
-    layer17_shortcut(register_module("layer17_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 128, 1).stride(2).bias(false)))),
-    layer19(register_module("layer19", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
-    layer21(register_module("layer21", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
-    layer24(register_module("layer24", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 256, 3).stride(2).padding(1).bias(false)))),
-    layer26(register_module("layer26", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
-    layer28_shortcut(register_module("layer28_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 256, 1).stride(2).bias(false)))),
-    layer30(register_module("layer30", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
-    layer32(register_module("layer32", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
-    layer35(register_module("layer35", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 512, 3).stride(2).padding(1).bias(false)))),
-    layer37(register_module("layer37", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
-    layer39_shortcut(register_module("layer39_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 512, 1).stride(2).bias(false)))),
-    layer41(register_module("layer41", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
-    layer43(register_module("layer43", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+    layer13(register_module("layer13", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
+    layer15(register_module("layer15", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 64, 3).stride(1).padding(1).bias(false)))),
+    layer18(register_module("layer18", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 128, 3).stride(2).padding(1).bias(false)))),
+    layer20(register_module("layer20", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer22_shortcut(register_module("layer22_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(64, 128, 1).stride(2).bias(false)))),
+    layer24(register_module("layer24", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer26(register_module("layer26", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer29(register_module("layer29", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer31(register_module("layer31", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer34(register_module("layer34", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer36(register_module("layer36", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 128, 3).stride(1).padding(1).bias(false)))),
+    layer39(register_module("layer39", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 256, 3).stride(2).padding(1).bias(false)))),
+    layer41(register_module("layer41", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer43_shortcut(register_module("layer43_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(128, 256, 1).stride(2).bias(false)))),
+    layer45(register_module("layer45", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer47(register_module("layer47", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer50(register_module("layer50", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer52(register_module("layer52", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer55(register_module("layer55", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer57(register_module("layer57", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer60(register_module("layer60", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer62(register_module("layer62", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer65(register_module("layer65", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer67(register_module("layer67", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 256, 3).stride(1).padding(1).bias(false)))),
+    layer70(register_module("layer70", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 512, 3).stride(2).padding(1).bias(false)))),
+    layer72(register_module("layer72", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+    layer74_shortcut(register_module("layer74_shortcut", torch::nn::Conv2d(torch::nn::Conv2dOptions(256, 512, 1).stride(2).bias(false)))),
+    layer76(register_module("layer76", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+    layer78(register_module("layer78", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+    layer81(register_module("layer81", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+    layer83(register_module("layer83", torch::nn::Conv2d(torch::nn::Conv2dOptions(512, 512, 3).stride(1).padding(1).bias(false)))),
+
+
+
+
+
 
     layer2(register_module("layer2", torch::nn::BatchNorm2d(64))),
     layer4(register_module("layer4", torch::nn::BatchNorm2d(64))),
     layer6(register_module("layer6", torch::nn::BatchNorm2d(64))),
     layer9(register_module("layer9", torch::nn::BatchNorm2d(64))),
     layer11(register_module("layer11", torch::nn::BatchNorm2d(64))),
-    layer14(register_module("layer14", torch::nn::BatchNorm2d(128))),
-    layer16(register_module("layer16", torch::nn::BatchNorm2d(128))),
-    layer18_shortcut(register_module("layer18_shortcut", torch::nn::BatchNorm2d(128))),
-    layer20(register_module("layer20", torch::nn::BatchNorm2d(128))),
-    layer22(register_module("layer22", torch::nn::BatchNorm2d(128))),
-    layer25(register_module("layer25", torch::nn::BatchNorm2d(256))),
-    layer27(register_module("layer27", torch::nn::BatchNorm2d(256))),
-    layer29_shortcut(register_module("layer29_shortcut", torch::nn::BatchNorm2d(256))),
-    layer31(register_module("layer31", torch::nn::BatchNorm2d(256))),
-    layer33(register_module("layer33", torch::nn::BatchNorm2d(256))),
-    layer36(register_module("layer36", torch::nn::BatchNorm2d(512))),
-    layer38(register_module("layer38", torch::nn::BatchNorm2d(512))),
-    layer40_shortcut(register_module("layer40_shortcut", torch::nn::BatchNorm2d(512))),
-    layer42(register_module("layer42", torch::nn::BatchNorm2d(512))),
-    layer44(register_module("layer44", torch::nn::BatchNorm2d(512))),
-    layer46(register_module("layer46", torch::nn::Linear(512,10))),
-    act(register_module("act", torch::nn::ReLU())){
-    filename = "Resnet.txt";
-    run_thread = true;;
-    std::thread serverThread(std::bind(&Resnet::startServer, this));
-    std::thread clientThread(std::bind(&Resnet::startClient, this, 5010));
-    std::thread clientThread_1(std::bind(&Resnet::startClient, this, 5020));
+    layer14(register_module("layer14", torch::nn::BatchNorm2d(64))),
+    layer16(register_module("layer16", torch::nn::BatchNorm2d(64))),
+    layer19(register_module("layer19", torch::nn::BatchNorm2d(128))),
+    layer21(register_module("layer21", torch::nn::BatchNorm2d(128))),
+    layer23_shortcut(register_module("layer23_shortcut", torch::nn::BatchNorm2d(128))),
+    layer25(register_module("layer25", torch::nn::BatchNorm2d(128))),
+    layer27(register_module("layer27", torch::nn::BatchNorm2d(128))),
+    
+    layer30(register_module("layer30", torch::nn::BatchNorm2d(128))),
+    layer32(register_module("layer32", torch::nn::BatchNorm2d(128))),
+    layer35(register_module("layer35", torch::nn::BatchNorm2d(128))),
+    layer37(register_module("layer37", torch::nn::BatchNorm2d(128))),
+    layer40(register_module("layer40", torch::nn::BatchNorm2d(256))),
+    layer42(register_module("layer42", torch::nn::BatchNorm2d(256))),
+    layer44_shortcut(register_module("layer44_shortcut", torch::nn::BatchNorm2d(256))),
+    layer46(register_module("layer46", torch::nn::BatchNorm2d(256))),
+    layer48(register_module("layer48", torch::nn::BatchNorm2d(256))),
+    layer51(register_module("layer51", torch::nn::BatchNorm2d(256))),
+    layer53(register_module("layer53", torch::nn::BatchNorm2d(256))),
+    layer56(register_module("layer56", torch::nn::BatchNorm2d(256))),
+    layer58(register_module("layer58", torch::nn::BatchNorm2d(256))),
+    layer61(register_module("layer61", torch::nn::BatchNorm2d(256))),
+    layer63(register_module("layer63", torch::nn::BatchNorm2d(256))),
+    layer66(register_module("layer66", torch::nn::BatchNorm2d(256))),
+    layer68(register_module("layer68", torch::nn::BatchNorm2d(256))),
+    layer71(register_module("layer71", torch::nn::BatchNorm2d(512))),
+    layer73(register_module("layer73", torch::nn::BatchNorm2d(512))),
+    layer75_shortcut(register_module("layer75_shortcut", torch::nn::BatchNorm2d(512))),
+    layer77(register_module("layer77", torch::nn::BatchNorm2d(512))),
+    layer79(register_module("layer79", torch::nn::BatchNorm2d(512))),
+    layer82(register_module("layer82", torch::nn::BatchNorm2d(512))),
+    layer84(register_module("layer84", torch::nn::BatchNorm2d(512))),
+
+    layer86(register_module("layer86", torch::nn::Linear(512, 10))),
+    act(register_module("act", torch::nn::ReLU())) {
+    filename = "Resnet34.txt";
+    run_thread = true;
+    
+    std::thread serverThread(std::bind(&Resnet34::startServer, this));
+    std::thread clientThread(std::bind(&Resnet34::startClient, this, 5010));
+    std::thread clientThread_1(std::bind(&Resnet34::startClient, this, 5020));
     clientThread.detach();
     clientThread_1.detach();
     serverThread.detach();
     WSACleanup();
 }
 
-Resnet::~Resnet() {
+Resnet34::~Resnet34() {
     run_thread = false;
 }
 
-ModuleInfo Resnet::GetModuleByName(const std::string& name) {
+ModuleInfo Resnet34::GetModuleByName(const std::string& name) {
     ModuleInfo module_info;
     for (auto& pair : this->named_children()) {
         if (pair.key() == name) {
@@ -88,22 +128,22 @@ ModuleInfo Resnet::GetModuleByName(const std::string& name) {
     return module_info;
 }
 
-torch::Tensor Resnet::layer_forward(torch::Tensor x) {
-    
+torch::Tensor Resnet34::layer_forward(torch::Tensor x) {
+
     while (in.size() > 0) Sleep(10);
     mu.lock();
     in.push_back(x);
     mu.unlock();
-    
-    while (out.size()==0) Sleep(10);
+
+    while (out.size() == 0) Sleep(10);
     mu.lock();
-    x=out.front();
+    x = out.front();
     out.erase(out.begin());
     mu.unlock();
     return x;
 }
 
-void Resnet::startServer()
+void Resnet34::startServer()
 {
     // Defining length variables
 
@@ -232,7 +272,7 @@ void Resnet::startServer()
     closesocket(s_server);
     closesocket(s_accept);
 }
-void Resnet::startClient(int port) {
+void Resnet34::startClient(int port) {
     // Defined length variable
 
     // Defined send buffer and receive buffer
@@ -360,8 +400,8 @@ void Resnet::startClient(int port) {
     closesocket(s_server);
 }
 
-torch::Tensor Resnet::forward(torch::Tensor x) {
-    
+torch::Tensor Resnet34::forward(torch::Tensor x) {
+
     auto out = layer1->forward(x);
     out = layer2->forward(out);
     out = act(out);
@@ -372,6 +412,7 @@ torch::Tensor Resnet::forward(torch::Tensor x) {
     out = layer5(out);
     out = layer6(out);
     out += x;
+    
     out = act(out);
     x = out.clone();
     out = layer8(x);
@@ -380,6 +421,7 @@ torch::Tensor Resnet::forward(torch::Tensor x) {
     out = layer10(out);
     out = layer11(out);
     out += x;
+    
     out = act(out);
     x = out.clone();
     out = layer13(x);
@@ -387,16 +429,19 @@ torch::Tensor Resnet::forward(torch::Tensor x) {
     out = act(out);
     out = layer15(out);
     out = layer16(out);
-    x = layer17_shortcut(x);
-    out += layer18_shortcut(x);
+    out += x;
+   
     out = act(out);
     x = out.clone();
-    out = layer19(x);
-    out = layer20(out);
+    out = layer18(x);
+    out = layer19(out);
     out = act(out);
+    out = layer20(out);
     out = layer21(out);
-    out = layer22(out);
-    out +=x;
+    x = layer22_shortcut(x);
+    x = layer23_shortcut(x);
+    out += x;
+
     out = act(out);
     x = out.clone();
     out = layer24(x);
@@ -404,36 +449,106 @@ torch::Tensor Resnet::forward(torch::Tensor x) {
     out = act(out);
     out = layer26(out);
     out = layer27(out);
-    x = layer28_shortcut(x);
-    out += layer29_shortcut(x);
+    out += x;
+   
     out = act(out);
     x = out.clone();
-    out = layer30(x);
-    out = layer31(out);
+    out = layer29(x);
+    out = layer30(out);
     out = act(out);
+    out = layer31(out);
     out = layer32(out);
-    out = layer33(out);
     out += x;
     out = act(out);
     x = out.clone();
-    out = layer35(x);
-    out = layer36(out);
+    out = layer34(x);
+    out = layer35(out);
     out = act(out);
+    out = layer36(out);
     out = layer37(out);
-    out = layer38(out);
-    x = layer39_shortcut(x);
-    out += layer40_shortcut(x);
+    out += x;
+    
     out = act(out);
     x = out.clone();
-    out = layer41(x);
-    out = layer42(out);
+    out = layer39(x);
+    out = layer40(out);
     out = act(out);
-    out = layer43(out);
-    out = layer44(out);
-    out += (x);
+    out = layer41(out);
+    out = layer42(out);
+    x = layer43_shortcut(x);
+    x = layer44_shortcut(x);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer45(x);
+    out = layer46(out);
+    out = act(out);
+    out = layer47(out);
+    out = layer48(out);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer50(x);
+    out = layer51(out);
+    out = act(out);
+    out = layer52(out);
+    out = layer53(out);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer55(x);
+    out = layer56(out);
+    out = act(out);
+    out = layer57(out);
+    out = layer58(out);
+    out += x;
+    out = act(out);
+
+    x = out.clone();
+    out = layer60(x);
+    out = layer61(out);
+    out = act(out);
+    out = layer62(out);
+    out = layer63(out);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer65(x);
+    out = layer66(out);
+    out = act(out);
+    out = layer67(out);
+    out = layer68(out);
+    out += x;
+    out = act(out);
+
+    x = out.clone();
+    out = layer70(x);
+    out = layer71(out);
+    out = act(out);
+    out = layer72(out);
+    out = layer73(out);
+    x = layer74_shortcut(x);
+    x = layer75_shortcut(x);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer76(x);
+    out = layer77(out);
+    out = act(out);
+    out = layer78(out);
+    out = layer79(out);
+    out += x;
+    out = act(out);
+    x = out.clone();
+    out = layer81(x);
+    out = layer82(out);
+    out = act(out);
+    out = layer83(out);
+    out = layer84(out);
+    out += x;
     out = act(out);
     out = torch::nn::functional::avg_pool2d(out, torch::nn::functional::AvgPool2dFuncOptions(4));
     out = out.view({ -1, 512 });
-    out = layer46(out);
+    out = layer86(out);
     return out;
 }

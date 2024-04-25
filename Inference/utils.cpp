@@ -65,6 +65,7 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
         module.to(device);
         // 遍历数据加载器中的批次
         for (auto& batch : *dataloader) {
+            std::cout << "begin\n";
             // 获取输入和标签
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
@@ -186,12 +187,16 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
             std::chrono::duration<double> elapsed = finish - start;
             std::cout << "Elapsed time: " << elapsed.count() << " s\n";
             // 计算预测准确率
+            
             auto predicted = output.argmax(1);
+            std::cout << predicted.sizes() << target.sizes() << std::endl;
             int64_t correct = predicted.eq(target).sum().item<int64_t>();
-
+            std::cout << "111111111\n";
             totalCorrect += correct;
+            std::cout << "111111111\n";
             totalSamples += data.size(0);
-
+            std::cout << "111111111\n";
+            break;
         }
 
         float accuracy = static_cast<float>(totalCorrect) / totalSamples * 100.0;
