@@ -11,6 +11,7 @@ Inference/**.users
 Inference/**.dll
 Inference/**.aps
 training/__pycache__/
+**/__pycache__/
 
 
 
