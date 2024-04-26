@@ -8,8 +8,11 @@ from models.SecureML import SecureML
 from models.Resnet import ResNet18,ResNet34
 from models.Resnet18 import Resnet18
 from models.Resnet34 import Resnet34
-
+# from models.vgg import vgg11
+from models.vgg11 import vgg11
 from utils import train,eval_acc,test_acc
+from transform import FlattenModel
+
 #training
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
@@ -27,37 +30,11 @@ train_loader = DataLoader(train_dataset,batch_size=128, shuffle=True)
 test_dataset=datasets.CIFAR10("./data", train=False, transform=transforms_test, download=True)
 test_loader = DataLoader(test_dataset,batch_size=32, shuffle=True)
 
-model=torch.load("./checkpoints/Resnet342024-04-22-20-02-58.pth").to('cpu')
-
-class FlattenModel(torch.nn.Module):
-    def __init__(self, original_model):
-        super(FlattenModel, self).__init__()
-        self.module_list = []  # 把这里改成python的list。
-        self.layer_num = 1
-        self.flatten_module(original_model)
-
-    def flatten_module(self, module,name=None):
-        if len(list(module.children())) == 0:
-
-            # 复制 old_layer 的权重到 module
-            if name is not None:
-                setattr(self, f'layer{self.layer_num}_'+name, module)
-                self.__getattr__(f'layer{self.layer_num}_'+name).load_state_dict(module.state_dict())
-            else :
-                setattr(self, f'layer{self.layer_num}', module)
-                self.__getattr__(f'layer{self.layer_num}').load_state_dict(module.state_dict())
-
-            
-            self.module_list.append(module)
-            self.layer_num += 1
-        else:
-            for key,child in module.named_children():
-                if "shortcut" in key:
-                    self.flatten_module(child,"shortcut")
-                else:
-                    self.flatten_module(child,name)
+# model = vgg11()
+model = torch.load("checkpoints/vgg112024-04-26-09-45-49.pth")
 
 new_model=FlattenModel(model)
+print(new_model)
  # 假设 src_model 是源模型， tgt_model 是目标模型
 # 获取源模型的参数
 src_state_dict = new_model.state_dict()
@@ -66,9 +43,9 @@ new_state_dict = {}
 for k, v in src_state_dict.items():
     new_state_dict[k] = v.detach().clone()
 
-mymodel = Resnet34()
+mymodel = vgg11()
 # 加载新的参数到目标模型
 mymodel.load_state_dict(new_state_dict)
-# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="Resnet34")
+print(mymodel)
+# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="vgg11")
 test_acc(model=mymodel,dataloader=test_loader,device="cpu")
-torch.save(mymodel,"./checkpoints/Resnet342024-04-22-20-02-58.pth")
