@@ -199,7 +199,7 @@ void Resnet34::startServer()
                     std::string identifier = (*iter).substr(0, 1);
                     if (identifier == "0") {
                         std::string func = (*iter).substr(3);
-                        if (func == "out = act(out);") {
+                        if (func == "data = act(data);") {
                             ModuleInfo module_info = this->GetModuleByName("act");
                             // 别忘了你需要先设置module_info指针和类型字符串
                             if (module_info.type == "torch::nn::ReLU")
@@ -211,15 +211,15 @@ void Resnet34::startServer()
                             }
 
                         }
-                        else if (func == "out = torch::nn::functional::avg_pool2d(out, torch::nn::functional::AvgPool2dFuncOptions(4));") {
+                        else if (func == "data = torch::nn::functional::avg_pool2d(data, torch::nn::functional::AvgPool2dFuncOptions(4));") {
 
                             data = torch::nn::functional::avg_pool2d(data, torch::nn::functional::AvgPool2dFuncOptions(4));
                         }
-                        else if (func == "out += x;")
+                        else if (func == "data += x;")
                         {
                             data = data + x;
                         }
-                        else if (func == "x = out.clone();")
+                        else if (func == "x = data.clone();")
                         {
                             x = data.clone();
                         }
@@ -227,7 +227,7 @@ void Resnet34::startServer()
                         {
                             send_x = true;
                         }
-                        else if (func == "out = out;")
+                        else if (func == "data = data;")
                         {
                             ;
                         }
@@ -402,153 +402,153 @@ void Resnet34::startClient(int port) {
 
 torch::Tensor Resnet34::forward(torch::Tensor x) {
 
-    auto out = layer1->forward(x);
-    out = layer2->forward(out);
-    out = act(out);
-    x = out.clone();
-    out = layer3(out);
-    out = layer4(out);
-    out = act(out);
-    out = layer5(out);
-    out = layer6(out);
-    out += x;
+    auto data = layer1->forward(x);
+    data = layer2->forward(data);
+    data = act(data);
+    x = data.clone();
+    data = layer3(data);
+    data = layer4(data);
+    data = act(data);
+    data = layer5(data);
+    data = layer6(data);
+    data += x;
     
-    out = act(out);
-    x = out.clone();
-    out = layer8(x);
-    out = layer9(out);
-    out = act(out);
-    out = layer10(out);
-    out = layer11(out);
-    out += x;
+    data = act(data);
+    x = data.clone();
+    data = layer8(x);
+    data = layer9(data);
+    data = act(data);
+    data = layer10(data);
+    data = layer11(data);
+    data += x;
     
-    out = act(out);
-    x = out.clone();
-    out = layer13(x);
-    out = layer14(out);
-    out = act(out);
-    out = layer15(out);
-    out = layer16(out);
-    out += x;
+    data = act(data);
+    x = data.clone();
+    data = layer13(x);
+    data = layer14(data);
+    data = act(data);
+    data = layer15(data);
+    data = layer16(data);
+    data += x;
    
-    out = act(out);
-    x = out.clone();
-    out = layer18(x);
-    out = layer19(out);
-    out = act(out);
-    out = layer20(out);
-    out = layer21(out);
+    data = act(data);
+    x = data.clone();
+    data = layer18(x);
+    data = layer19(data);
+    data = act(data);
+    data = layer20(data);
+    data = layer21(data);
     x = layer22_shortcut(x);
     x = layer23_shortcut(x);
-    out += x;
+    data += x;
 
-    out = act(out);
-    x = out.clone();
-    out = layer24(x);
-    out = layer25(out);
-    out = act(out);
-    out = layer26(out);
-    out = layer27(out);
-    out += x;
+    data = act(data);
+    x = data.clone();
+    data = layer24(x);
+    data = layer25(data);
+    data = act(data);
+    data = layer26(data);
+    data = layer27(data);
+    data += x;
    
-    out = act(out);
-    x = out.clone();
-    out = layer29(x);
-    out = layer30(out);
-    out = act(out);
-    out = layer31(out);
-    out = layer32(out);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer34(x);
-    out = layer35(out);
-    out = act(out);
-    out = layer36(out);
-    out = layer37(out);
-    out += x;
+    data = act(data);
+    x = data.clone();
+    data = layer29(x);
+    data = layer30(data);
+    data = act(data);
+    data = layer31(data);
+    data = layer32(data);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer34(x);
+    data = layer35(data);
+    data = act(data);
+    data = layer36(data);
+    data = layer37(data);
+    data += x;
     
-    out = act(out);
-    x = out.clone();
-    out = layer39(x);
-    out = layer40(out);
-    out = act(out);
-    out = layer41(out);
-    out = layer42(out);
+    data = act(data);
+    x = data.clone();
+    data = layer39(x);
+    data = layer40(data);
+    data = act(data);
+    data = layer41(data);
+    data = layer42(data);
     x = layer43_shortcut(x);
     x = layer44_shortcut(x);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer45(x);
-    out = layer46(out);
-    out = act(out);
-    out = layer47(out);
-    out = layer48(out);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer50(x);
-    out = layer51(out);
-    out = act(out);
-    out = layer52(out);
-    out = layer53(out);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer55(x);
-    out = layer56(out);
-    out = act(out);
-    out = layer57(out);
-    out = layer58(out);
-    out += x;
-    out = act(out);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer45(x);
+    data = layer46(data);
+    data = act(data);
+    data = layer47(data);
+    data = layer48(data);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer50(x);
+    data = layer51(data);
+    data = act(data);
+    data = layer52(data);
+    data = layer53(data);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer55(x);
+    data = layer56(data);
+    data = act(data);
+    data = layer57(data);
+    data = layer58(data);
+    data += x;
+    data = act(data);
 
-    x = out.clone();
-    out = layer60(x);
-    out = layer61(out);
-    out = act(out);
-    out = layer62(out);
-    out = layer63(out);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer65(x);
-    out = layer66(out);
-    out = act(out);
-    out = layer67(out);
-    out = layer68(out);
-    out += x;
-    out = act(out);
+    x = data.clone();
+    data = layer60(x);
+    data = layer61(data);
+    data = act(data);
+    data = layer62(data);
+    data = layer63(data);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer65(x);
+    data = layer66(data);
+    data = act(data);
+    data = layer67(data);
+    data = layer68(data);
+    data += x;
+    data = act(data);
 
-    x = out.clone();
-    out = layer70(x);
-    out = layer71(out);
-    out = act(out);
-    out = layer72(out);
-    out = layer73(out);
+    x = data.clone();
+    data = layer70(x);
+    data = layer71(data);
+    data = act(data);
+    data = layer72(data);
+    data = layer73(data);
     x = layer74_shortcut(x);
     x = layer75_shortcut(x);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer76(x);
-    out = layer77(out);
-    out = act(out);
-    out = layer78(out);
-    out = layer79(out);
-    out += x;
-    out = act(out);
-    x = out.clone();
-    out = layer81(x);
-    out = layer82(out);
-    out = act(out);
-    out = layer83(out);
-    out = layer84(out);
-    out += x;
-    out = act(out);
-    out = torch::nn::functional::avg_pool2d(out, torch::nn::functional::AvgPool2dFuncOptions(4));
-    out = out.view({ -1, 512 });
-    out = layer86(out);
-    return out;
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer76(x);
+    data = layer77(data);
+    data = act(data);
+    data = layer78(data);
+    data = layer79(data);
+    data += x;
+    data = act(data);
+    x = data.clone();
+    data = layer81(x);
+    data = layer82(data);
+    data = act(data);
+    data = layer83(data);
+    data = layer84(data);
+    data += x;
+    data = act(data);
+    data = torch::nn::functional::avg_pool2d(data, torch::nn::functional::AvgPool2dFuncOptions(4));
+    data = data.view({ -1, 512 });
+    data = layer86(data);
+    return data;
 }

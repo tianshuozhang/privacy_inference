@@ -1298,3 +1298,9 @@ Elapsed time distribute compute: 4.27773 s
 Elapsed time distribute compute: 3.98988 s
 Elapsed time distribute compute: 5.94369 s
 Elapsed time distribute compute: 4.29351 s
+Elapsed time distribute compute: 2.74935 s
+Elapsed time distribute compute: 2.72378 s
+Elapsed time distribute compute: 2.76699 s
+Elapsed time distribute compute: 2.80406 s
+Elapsed time distribute compute: 2.76503 s
+Elapsed time distribute compute: 2.77652 s

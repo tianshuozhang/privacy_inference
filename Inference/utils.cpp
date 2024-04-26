@@ -100,7 +100,7 @@ void layer_weight_extraction(Base &module, const std::string path) {
     for (const auto& parameter : loadmodule.named_parameters()) {
         auto& name = parameter.name;
         auto& tensor = parameter.value;
-        //std::cout << name << "\n";
+        
         // 根据名字在你的新模型中找到相应的参数，然后设置值
         // 这需要你的新模型的参数名与旧模型的参数名完全匹配
         for (auto& p : module.named_parameters()) {
