@@ -17,6 +17,7 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
         }
         module.to(device);
         module.eval();
+        auto start = std::chrono::high_resolution_clock::now();
         // 遍历数据加载器中的批次
         for (auto& batch : *dataloader) {
             // 获取输入和标签
@@ -30,11 +31,9 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
 
 
             // 前向传播
-            auto start = std::chrono::high_resolution_clock::now();
+            
             torch::Tensor output = module.forward({ data });
-            auto finish = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = finish - start;
-            std::cout << "Elapsed time: " << elapsed.count() << " s\n";
+            
             // 计算预测准确率
             auto predicted = output.argmax(1);
             int64_t correct = predicted.eq(target).sum().item<int64_t>();
@@ -44,7 +43,9 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
             break;
 
         }
-
+        auto finish = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = finish - start;
+        std::cout << "Elapsed time: " << elapsed.count() << " s\n";
         float accuracy = static_cast<float>(totalCorrect) / totalSamples * 100.0;
         return accuracy;
     }
@@ -63,6 +64,8 @@ float test_acc(Base &module,const std::string &datapath , const std::string& tag
             device = torch::kCUDA;
         }
         module.to(device);
+        
+
         // 遍历数据加载器中的批次
         auto start = std::chrono::high_resolution_clock::now();
         for (auto& batch : *dataloader) {
@@ -128,6 +131,7 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
         }
         module.to(device);
         module.eval();
+        auto start = std::chrono::high_resolution_clock::now();
         // 遍历数据加载器中的批次
         for (auto& batch : *dataloader) {
             // 获取输入和标签
@@ -141,21 +145,21 @@ float test_layer(Base &module, const std::string & datapath, const std::string& 
 
 
             // 前向传播
-            auto start = std::chrono::high_resolution_clock::now();
+            
             torch::Tensor output = module.layer_forward({ data });
-            auto finish = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = finish - start;
-            std::cout << "Elapsed time: " << elapsed.count() << " s\n";
+            
             // 计算预测准确率
             auto predicted = output.argmax(1);
             int64_t correct = predicted.eq(target).sum().item<int64_t>();
 
             totalCorrect += correct;
             totalSamples += data.size(0);
-            
+            break;
 
         }
-
+        auto finish = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = finish - start;
+        std::cout << "Elapsed time: " << elapsed.count() << " s\n";
         float accuracy = static_cast<float>(totalCorrect) / totalSamples * 100.0;
         return accuracy;
     }

@@ -3,11 +3,12 @@
 #include <ATen/ATen.h>
 #include <torch/script.h>
 #include "Lenet.h"
+#include "Minionn.h"
 #include"Resnet18.h"
 #include"Resnet34.h"
 #include "utils.h"
-#include "Minionn.h"
 #include"vgg11.h"
+#include"vgg13.h"
 int main()
 {
     //auto path = "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/Lenet.ptl";
@@ -20,23 +21,29 @@ int main()
     //auto datapath = "../data/MNIST/raw";
     //auto tag = "mnist";
    
-    Resnet18 module;
-    auto path= "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/Resnet18.ptl";
-    auto datapath = "../data/cifar-10-batches-bin";
-    auto tag = "cifar10";
+    //Resnet18 module;
+    //auto path= "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/Resnet18.ptl";
+    //auto datapath = "../data/cifar-10-batches-bin";
+    //auto tag = "cifar10";
 
     //Resnet34 module;
     //auto path= "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/Resnet34.ptl";
     //auto datapath = "../data/cifar-10-batches-bin";
     //auto tag = "cifar10";
 
-    //vgg11 module;
-    //auto path = "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/vgg11.ptl";
+    vgg11 module;
+    auto path = "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/vgg11.ptl";
+    auto datapath = "../data/cifar-10-batches-bin";
+    auto tag = "cifar10";
+
+    //vgg13 module;
+    //auto path = "C:/Users/17612/Desktop/MPC/experment/privacy_inference/checkpoints/vgg13.ptl";
     //auto datapath = "../data/cifar-10-batches-bin";
     //auto tag = "cifar10";
+    
 
     layer_weight_extraction(module, path);
-    //std::cout << "Accuracy: " << test_acc(module, datapath, tag) << "%" << std::endl;
+    std::cout << "Accuracy: " << test_acc(module, datapath, tag) << "%" << std::endl;
     std::cout << "Accuracy: " << test_layer(module, datapath, tag) << "%" << std::endl;
     
     return 0;

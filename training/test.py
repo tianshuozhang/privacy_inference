@@ -8,8 +8,8 @@ from models.SecureML import SecureML
 from models.Resnet import ResNet18,ResNet34
 from models.Resnet18 import Resnet18
 from models.Resnet34 import Resnet34
-# from models.vgg import vgg11
-from models.vgg11 import vgg11
+# from models.vgg import vgg13
+from models.vgg13 import vgg13
 from utils import train,eval_acc,test_acc
 from transform import FlattenModel
 
@@ -30,8 +30,8 @@ train_loader = DataLoader(train_dataset,batch_size=128, shuffle=True)
 test_dataset=datasets.CIFAR10("./data", train=False, transform=transforms_test, download=True)
 test_loader = DataLoader(test_dataset,batch_size=32, shuffle=True)
 
-# model = vgg11()
-model = torch.load("checkpoints/vgg112024-04-26-09-45-49.pth")
+# model = vgg13()
+model = torch.load("checkpoints/vgg132024-04-28-13-13-26.pth")
 
 new_model=FlattenModel(model)
 print(new_model)
@@ -43,10 +43,11 @@ new_state_dict = {}
 for k, v in src_state_dict.items():
     new_state_dict[k] = v.detach().clone()
 
-mymodel = vgg11()
+mymodel = vgg13()
 # 加载新的参数到目标模型
 mymodel.load_state_dict(new_state_dict)
 print(mymodel)
-# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="vgg11")
+# train(model=model,dataloader=train_loader,device="cuda",epochs=30,tag="vgg13")
 test_acc(model=mymodel,dataloader=test_loader,device="cpu")
-torch.save(mymodel,"checkpoints/vgg112024-04-26-09-45-49.pth")
+
+torch.save(mymodel,"checkpoints/vgg132024-04-28-13-13-26.pth")
