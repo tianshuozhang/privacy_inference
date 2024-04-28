@@ -2,7 +2,8 @@ checkpoints/
 libtorch1.13/
 data/
 Inference/.vs/
-Inference/x64/
+Inference/x64/Debug/
+Inference/x64/Release/
 Inference/**.sln
 Inference/**.json
 Inference/**.vcxproj
