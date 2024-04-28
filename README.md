@@ -11,7 +11,7 @@ pytorch框架进行训练，训练完成后通过`torch.jit`的方式来保存�
 
 ## 模型选择
 - 对于MNIST数据集实现了Lenet和Minionn模型
-- 对于CIFAR数据集实现了Resnet18，Resnet34，Vgg11等经典模型
+- 对于CIFAR数据集实现了Resnet18，Resnet34，Vgg11，vgg13等经典模型
 
 ## 计算类型
 均通过浮点数类型计算进行推理。
