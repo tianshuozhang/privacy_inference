@@ -1,5 +1,5 @@
 # privacy_inference
-
+通过两个gpu进行线性层加速，可信部分进行核心计算，包括激活函数等非线性计算。
 ## training
 pytorch框架进行训练，训练完成后通过`torch.jit`的方式来保存，变为可以在`c++`中读取的类型。
 
