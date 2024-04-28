@@ -20,11 +20,11 @@
 0: out = layer20(out);
 0: out = layer21(out);
 1: out = out.view({ -1, 512 });
-1: out = layer22(out);
-0: out = layer23(out);
+0: out = layer22(out);
+1: out = layer23(out);
 0: out = layer24(out);
-1: out = layer25(out);
-0: out = layer26(out);
+0: out = layer25(out);
+1: out = layer26(out);
 0: out = layer27(out);
 1: out = layer28(out);
 0: out = out;

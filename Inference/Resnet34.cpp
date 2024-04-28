@@ -54,7 +54,7 @@ Resnet34::Resnet34()
     layer23_shortcut(register_module("layer23_shortcut", torch::nn::BatchNorm2d(128))),
     layer25(register_module("layer25", torch::nn::BatchNorm2d(128))),
     layer27(register_module("layer27", torch::nn::BatchNorm2d(128))),
-    
+
     layer30(register_module("layer30", torch::nn::BatchNorm2d(128))),
     layer32(register_module("layer32", torch::nn::BatchNorm2d(128))),
     layer35(register_module("layer35", torch::nn::BatchNorm2d(128))),
@@ -84,7 +84,7 @@ Resnet34::Resnet34()
     act(register_module("act", torch::nn::ReLU())) {
     filename = "Resnet34.txt";
     run_thread = true;
-    
+
     std::thread serverThread(std::bind(&Resnet34::startServer, this));
     std::thread clientThread(std::bind(&Resnet34::startClient, this, 5010));
     std::thread clientThread_1(std::bind(&Resnet34::startClient, this, 5020));
@@ -142,7 +142,6 @@ torch::Tensor Resnet34::layer_forward(torch::Tensor x) {
     mu.unlock();
     return x;
 }
-
 void Resnet34::startServer()
 {
     // Defining length variables
@@ -199,7 +198,7 @@ void Resnet34::startServer()
                     std::string identifier = (*iter).substr(0, 1);
                     if (identifier == "0") {
                         std::string func = (*iter).substr(3);
-                        if (func == "data = act(data);") {
+                        if (func == "out = act(out);") {
                             ModuleInfo module_info = this->GetModuleByName("act");
                             // 别忘了你需要先设置module_info指针和类型字符串
                             if (module_info.type == "torch::nn::ReLU")
@@ -211,15 +210,15 @@ void Resnet34::startServer()
                             }
 
                         }
-                        else if (func == "data = torch::nn::functional::avg_pool2d(data, torch::nn::functional::AvgPool2dFuncOptions(4));") {
+                        else if (func == "out = torch::nn::functional::avg_pool2d(out, torch::nn::functional::AvgPool2dFuncOptions(4));") {
 
                             data = torch::nn::functional::avg_pool2d(data, torch::nn::functional::AvgPool2dFuncOptions(4));
                         }
-                        else if (func == "data += x;")
+                        else if (func == "out += x;")
                         {
                             data = data + x;
                         }
-                        else if (func == "x = data.clone();")
+                        else if (func == "x = out.clone();")
                         {
                             x = data.clone();
                         }
@@ -227,10 +226,52 @@ void Resnet34::startServer()
                         {
                             send_x = true;
                         }
-                        else if (func == "data = data;")
+                        else if (func == "out = out;")
                         {
                             ;
                         }
+                        else
+                        {
+                            std::regex re("layer\\d+.*?\\(");
+                            std::smatch match;
+                            if (std::regex_search(func, match, re))
+                            {
+                                std::string numberString = match[0];
+                                numberString = numberString.substr(0, numberString.size() - 1);
+                                ModuleInfo module_info = this->GetModuleByName(numberString);
+                                // 别忘了你需要先设置module_info指针和类型字符串
+                                if (module_info.type == "torch::nn::ReLU")
+                                {
+
+                                    auto linear_module = module_info.ptr->as<torch::nn::ReLU>();
+
+                                    data = linear_module->forward(data);
+
+                                    // now you can use `linear_module` which is `torch::nn::Linear*`
+                                }
+                                else if (module_info.type == "torch::nn::BatchNorm2d")
+                                {
+                                    auto conv_module = module_info.ptr->as<torch::nn::BatchNorm2d>();
+                                    if (conv_module != nullptr)
+                                    {
+
+                                        data = (conv_module)->forward(data);
+                                    }
+                                    // now you can use `conv_module` which is `torch::nn::Conv2d*`
+                                }
+                                else if (module_info.type == "torch::nn::Dropout")
+                                {
+                                    auto conv_module = module_info.ptr->as<torch::nn::Dropout>();
+                                    if (conv_module != nullptr)
+                                    {
+
+                                        data = (conv_module)->forward(data);
+                                    }
+                                    // now you can use `conv_module` which is `torch::nn::BatchNorm2d*`
+                                }
+                            }
+                        }
+
                         ++iter;
                     }
                     else {
@@ -412,7 +453,7 @@ torch::Tensor Resnet34::forward(torch::Tensor x) {
     data = layer5(data);
     data = layer6(data);
     data += x;
-    
+
     data = act(data);
     x = data.clone();
     data = layer8(x);
@@ -421,7 +462,7 @@ torch::Tensor Resnet34::forward(torch::Tensor x) {
     data = layer10(data);
     data = layer11(data);
     data += x;
-    
+
     data = act(data);
     x = data.clone();
     data = layer13(x);
@@ -430,7 +471,7 @@ torch::Tensor Resnet34::forward(torch::Tensor x) {
     data = layer15(data);
     data = layer16(data);
     data += x;
-   
+
     data = act(data);
     x = data.clone();
     data = layer18(x);
@@ -450,7 +491,7 @@ torch::Tensor Resnet34::forward(torch::Tensor x) {
     data = layer26(data);
     data = layer27(data);
     data += x;
-   
+
     data = act(data);
     x = data.clone();
     data = layer29(x);
@@ -467,7 +508,7 @@ torch::Tensor Resnet34::forward(torch::Tensor x) {
     data = layer36(data);
     data = layer37(data);
     data += x;
-    
+
     data = act(data);
     x = data.clone();
     data = layer39(x);

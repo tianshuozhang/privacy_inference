@@ -191,6 +191,47 @@ void Resnet18::startServer()
                         {
                             ;
                         }
+                        else
+                        {
+                            std::regex re("layer\\d+.*?\\(");
+                            std::smatch match;
+                            if (std::regex_search(func, match, re))
+                            {
+                                std::string numberString = match[0];
+                                numberString = numberString.substr(0, numberString.size() - 1);
+                                ModuleInfo module_info = this->GetModuleByName(numberString);
+                                // 别忘了你需要先设置module_info指针和类型字符串
+                                if (module_info.type == "torch::nn::ReLU")
+                                {
+
+                                    auto linear_module = module_info.ptr->as<torch::nn::ReLU>();
+
+                                    data = linear_module->forward(data);
+
+                                    // now you can use `linear_module` which is `torch::nn::Linear*`
+                                }
+                                else if (module_info.type == "torch::nn::BatchNorm2d")
+                                {
+                                    auto conv_module = module_info.ptr->as<torch::nn::BatchNorm2d>();
+                                    if (conv_module != nullptr)
+                                    {
+
+                                        data = (conv_module)->forward(data);
+                                    }
+                                    // now you can use `conv_module` which is `torch::nn::Conv2d*`
+                                }
+                                else if (module_info.type == "torch::nn::Dropout")
+                                {
+                                    auto conv_module = module_info.ptr->as<torch::nn::Dropout>();
+                                    if (conv_module != nullptr)
+                                    {
+
+                                        data = (conv_module)->forward(data);
+                                    }
+                                    // now you can use `conv_module` which is `torch::nn::BatchNorm2d*`
+                                }
+                            }
+                        }
                         ++iter;
                     }
                     else {

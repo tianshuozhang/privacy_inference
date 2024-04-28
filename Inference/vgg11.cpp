@@ -155,8 +155,7 @@ void vgg11::startServer() {
                     if (identifier == "0") {
                         std::string func = (*iter).substr(3);
                     
-                        std::cout << func << "\n";
-                        std::cout << data.sizes() << "\n";
+                       
                         if (func == "out = out;") ;
                         else {
                             std::regex re("layer\\d+.*?\\(");
